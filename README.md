@@ -3,22 +3,22 @@ Optei por subir uma máquina virtual com o Vagrant junto com o Virtualbox
 ```
 vagrant init adavilag/ubuntu-server-22.04.1
 ```
-
+```
 root@victor-ubuntu:/home/victor/ubuntu-server-opencms# ls -lha
 total 16K
 drwxr-xr-x  3 root   root   4,0K out 19 11:49 .
 drwxr-x--- 22 victor victor 4,0K out 19 11:47 ..
 drwxr-xr-x  4 root   root   4,0K out 19 11:50 .vagrant
 -rw-r--r--  1 root   root   3,4K out 19 11:49 Vagrantfile
-
+```
 Após a conclusão do processo, descomentei a seguinte linha para deixar a rede como bridged
-
+```
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
   config.vm.network "public_network"
-
-Após, executado o comando vagrant up no mesmo diretório  
+```
+Após, executado o comando ```vagrant up``` no mesmo diretório  
 
 —----------------------------------------------------------------------------------------------------------------------
 Dependências do OpenCms
@@ -27,22 +27,24 @@ Dependências do OpenCms
 -> OpenCms supports Tomcat 9.x and 8.x.
 
 Instalado versão 11 do OpenJDK
-
+```
 sudo apt install openjdk-11-jdk
-
+```
+```
 root@vagrant:/opt/tomcat/logs# java --version
 openjdk 11.0.24 2024-07-16
 OpenJDK Runtime Environment (build 11.0.24+8-post-Ubuntu-1ubuntu320.04)
 OpenJDK 64-Bit Server VM (build 11.0.24+8-post-Ubuntu-1ubuntu320.04, mixed mode, sharing)
-
+```
 Criado um usuário para o Tomcat
-
+```
 sudo useradd -m -d /opt/tomcat -U -s /bin/false tomcat
-
+```
 No diretório /tmp, efetuado download do Tomcat
-
- wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
-
+```
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
+```
+```
 root@vagrant:/tmp# ls -lha
 total 13M
 drwxrwxrwt 11 root root 4.0K Oct 19 14:57 .
@@ -57,23 +59,27 @@ drwx------  3 root root 4.0K Oct 19 14:54 systemd-private-c0dd8f4b968a4b80b9f00b
 drwxrwxrwt  2 root root 4.0K Oct 19 14:54 .Test-unix
 drwxrwxrwt  2 root root 4.0K Oct 19 14:54 .X11-unix
 drwxrwxrwt  2 root root 4.0K Oct 19 14:54 .XIM-unix
-
+```
 Descompactado no diretório /opt/tomcat
-
+```
 sudo tar xzvf apache-tomcat-9*tar.gz -C /opt/tomcat --strip-components=1
+```
 
 Alterado o owner e o group do diretório
-
+```
 sudo chown -R tomcat:tomcat /opt/tomcat/
+```
 
 Liberado permissão de execução para o usuário Tomcat
-
+```
 sudo chmod -R u+x /opt/tomcat/bin no diretório /bin
+```
 
 Criado um serviço do Tomcat
-
+```
 sudo nano /etc/systemd/system/tomcat.service
-
+```
+```
 [Unit]
 Description=Tomcat
 After=network.target
@@ -99,9 +105,9 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-
+```
 Reiniciado o daemon, iniciado o Tomcat e habilitado na inicialização do sistemas
-
+```
 systemctl daemon-reload
  sudo systemctl start tomcat
 ystemctl status tomcat
@@ -117,11 +123,12 @@ ystemctl status tomcat
 Oct 19 14:59:10 vagrant systemd[1]: Starting Tomcat...
 Oct 19 14:59:10 vagrant startup.sh[3542]: Tomcat started.
 Oct 19 14:59:10 vagrant systemd[1]: Started Tomcat.
-
+```
 Instalado o postgresql
-
+```
 sudo apt install postgresql
-
+```
+```
 systemctl status postgresql
 ● postgresql.service - PostgreSQL RDBMS
      Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
@@ -134,32 +141,38 @@ systemctl status postgresql
 Oct 19 12:01:02 vagrant systemd[1]: Starting PostgreSQL RDBMS...
 Oct 19 12:01:02 vagrant systemd[1]: Finished PostgreSQL RDBMS.
 root@vagrant:/tmp# 
-
+```
+Verificado a versão do postgresql
+```
 psql --version
 
 psql (PostgreSQL) 12.20 (Ubuntu 12.20-0ubuntu0.20.04.1)
-
-m /opt efetuado o download o opencms
-
+```
+No diretório /opt efetuado o download o opencms
+```
 wget http://www.opencms.org/downloads/opencms/opencms-18.0.zip
-
+```
 Extraido o opencms 
-
+```
 unzip opencms-18.0.zip
-
+```
 
 Movido para o diretório dos apps do tomcat
+```
 mv opencms tomcat/webapps/
-
+```
 Reiniciado o tomcat
-
+```
 systemctl restart tomcat
-
+```
+Ajustado permissão no diretório do opencms do Tomcat
+```
 chown -R tomcat:tomcat /opt/tomcat/webapps/opencms
 sudo chmod -R 755 /opt/tomcat/webapps/opencms
-
+```
 Opencms iniciado
 
+```
 19-Oct-2024 01:11:15.979 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.96
 19-Oct-2024 01:11:15.989 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Oct 3 2024 19:44:30 UTC
 19-Oct-2024 01:11:15.989 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.96.0
@@ -242,9 +255,9 @@ NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED -
 19-Oct-2024 01:11:59.601 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/tomcat/webapps/docs] has finished in [38] ms
 19-Oct-2024 01:11:59.616 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
 19-Oct-2024 01:11:59.656 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [16238] milliseconds
-
+```
 Configuração do usuário no banco para rodar o setup do OpenCMS
-
+```
 sudo -u post postgres
 
 CREATE ROLE opencmssetup WITH LOGIN PASSWORD 'opencms';
@@ -253,4 +266,5 @@ ALTER ROLE opencmssetup SUPERUSER;
 
 Para sair da linha de comando
 
-\q 
+\q
+```
