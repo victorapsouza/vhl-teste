@@ -20,10 +20,10 @@ Após a conclusão do processo, descomentei a seguinte linha para deixar a rede 
 ```
 Após, executado o comando ```vagrant up``` no mesmo diretório  
 
-—----------------------------------------------------------------------------------------------------------------------
-Dependências do OpenCms
+:warning: Dependências do OpenCms
 
 :arrow_right: OpenCms supports Java 8 and Java 11 LTS.
+
 :arrow_right: OpenCms supports Tomcat 9.x and 8.x.
 
 Instalado versão 11 do OpenJDK
