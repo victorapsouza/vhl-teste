@@ -23,8 +23,8 @@ Após, executado o comando ```vagrant up``` no mesmo diretório
 —----------------------------------------------------------------------------------------------------------------------
 Dependências do OpenCms
 
--> OpenCms supports Java 8 and Java 11 LTS.
--> OpenCms supports Tomcat 9.x and 8.x.
+:arrow_right: OpenCms supports Java 8 and Java 11 LTS.
+:arrow_right: OpenCms supports Tomcat 9.x and 8.x.
 
 Instalado versão 11 do OpenJDK
 ```
