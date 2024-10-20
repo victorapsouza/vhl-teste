@@ -326,3 +326,13 @@ server {
 
 Utils:
 
+```
+/tomcat/webapps/opencms/WEB-INF/logs/opencms.log
+```
+```
+/tomcat/logs/catalina.out
+```
+```
+/var/log/nginx/access.log
+/var/log/nginx/error.log
+```
