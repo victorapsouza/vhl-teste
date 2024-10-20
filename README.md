@@ -301,9 +301,9 @@ apt-get install nginx
 ```
 Criado  um arquivo de configuração para o OpenCMS
 
-server_name opencms.local; define o domínio local que será utilizado para acessar o OpenCms.
+```server_name opencms.local; ``` define o domínio local que será utilizado para acessar o OpenCms.
 
-proxy_pass http://192.168.1.13:8080; as requisições serão redirecionadas para o Tomcat.
+```proxy_pass http://192.168.1.13:8080; ``` as requisições serão redirecionadas para o Tomcat.
 
 ```
 nano /etc/nginx/sites-available/opencms
