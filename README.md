@@ -22,7 +22,7 @@ Após, executado o comando ```vagrant up``` para iniciar a máquina
 
 :warning: Requisitos do OpenCms
 
-:arrow_right: OpenCms supports Java 8 and Java 11 LTS.
+:arrow_right: OpenCms 18 is compatible with Java 21, 17, and 11.
 
 :arrow_right: OpenCms supports Tomcat 9.x and 8.x.
 
