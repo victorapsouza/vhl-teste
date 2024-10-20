@@ -18,9 +18,9 @@ Após a conclusão do processo, descomentei a seguinte linha para deixar a rede 
   # your network.
   config.vm.network "public_network"
 ```
-Após, executado o comando ```vagrant up``` no mesmo diretório  
+Após, executado o comando ```vagrant up``` para iniciar a máquina  
 
-:warning: Dependências do OpenCms
+:warning: Requisitos do OpenCms
 
 :arrow_right: OpenCms supports Java 8 and Java 11 LTS.
 
@@ -36,11 +36,11 @@ openjdk 11.0.24 2024-07-16
 OpenJDK Runtime Environment (build 11.0.24+8-post-Ubuntu-1ubuntu320.04)
 OpenJDK 64-Bit Server VM (build 11.0.24+8-post-Ubuntu-1ubuntu320.04, mixed mode, sharing)
 ```
-Criado um usuário para o Tomcat
+Criado um usuário para o Tomcat, por questão de segurança e praticidade
 ```
 sudo useradd -m -d /opt/tomcat -U -s /bin/false tomcat
 ```
-No diretório /tmp, efetuado download do Tomcat
+No diretório /tmp, efetuado download do Tomcat com wget
 ```
 wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
 ```
@@ -65,12 +65,12 @@ Descompactado no diretório /opt/tomcat
 sudo tar xzvf apache-tomcat-9*tar.gz -C /opt/tomcat --strip-components=1
 ```
 
-Alterado o owner e o group do diretório
+Alterado o owner e o group do diretório para o usuário e grupo Tomcat
 ```
 sudo chown -R tomcat:tomcat /opt/tomcat/
 ```
 
-Liberado permissão de execução para o usuário Tomcat
+Liberado permissão de execução para o usuário Tomcat no /bin, onde contém os sripts essencias
 ```
 sudo chmod -R u+x /opt/tomcat/bin no diretório /bin
 ```
@@ -106,7 +106,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
-Reiniciado o daemon, iniciado o Tomcat e habilitado na inicialização do sistemas
+Reiniciado o daemon, iniciado o Tomcat e habilitado na inicialização do sistema
 ```
 systemctl daemon-reload
  sudo systemctl start tomcat
@@ -148,7 +148,7 @@ psql --version
 
 psql (PostgreSQL) 12.20 (Ubuntu 12.20-0ubuntu0.20.04.1)
 ```
-No diretório /opt efetuado o download o opencms
+No diretório /opt efetuado o download o opencms com wget
 ```
 wget http://www.opencms.org/downloads/opencms/opencms-18.0.zip
 ```
@@ -302,7 +302,8 @@ apt-get install nginx
 Criado  um arquivo de configuração para o OpenCMS
 
 server_name opencms.local; define o domínio local que será utilizado para acessar o OpenCms.
-proxy_pass http://localhost:8080; as requisições serão redirecionadas para o Tomcat.
+
+proxy_pass http://192.168.1.13:8080; as requisições serão redirecionadas para o Tomcat.
 
 ```
 nano /etc/nginx/sites-available/opencms
