@@ -319,5 +319,7 @@ server {
 }
 ```
 
+<img src="final-nginx.png">
+
 Utils:
 
