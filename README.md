@@ -292,6 +292,9 @@ Para sair da linha de comando
 
 \q
 ```
+
+<img src="final-instalacao.png">
+
 Instalação do Nginx
 ```
 apt-get install nginx
