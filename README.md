@@ -255,6 +255,30 @@ NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED -
 19-Oct-2024 01:11:59.601 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/tomcat/webapps/docs] has finished in [38] ms
 19-Oct-2024 01:11:59.616 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
 19-Oct-2024 01:11:59.656 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [16238] milliseconds
+Setup-Bean initialized successfully.
+Check runtime connection....
+Check runtime connection - COMPLETED
+Check setup connection....
+Check setup connection - COMPLETED
+DB connection tested successfully.
+Database created successfully.
+Tables created successfully.
+Database setup was successful.
+19-Oct-2024 12:17:05.009 WARNING [OpenCms: Indexing 'OpenCms-is-amazing.pdf'] org.apache.tika.config.InitializableProblemHandler$3.handleInitializableProblem org.xerial's sqlite-jdbc is not loaded.
+Please provide the jar on your classpath to parse sqlite files.
+See tika-parsers/pom.xml for the correct version.
+Starting OpenCms, version 18.0 in web application "opencms"
+
+Copyright (c) 2002 - 2024 Alkacon Software GmbH & Co. KG
+OpenCms comes with ABSOLUTELY NO WARRANTY
+This is free software, and you are welcome to
+redistribute it under certain conditions.
+Please see the GNU Lesser General Public Licence for
+further details.
+
+
+Not starting JLAN server because no config file was found at /opt/tomcat/webapps/opencms/WEB-INF/config/jlanConfig.xml
+
 ```
 Configuração do usuário no banco para rodar o setup do OpenCMS
 ```
@@ -268,3 +292,32 @@ Para sair da linha de comando
 
 \q
 ```
+Instalação do Nginx
+```
+apt-get install nginx
+```
+Criado  um arquivo de configuração para o OpenCMS
+
+server_name opencms.local; define o domínio local que será utilizado para acessar o OpenCms.
+proxy_pass http://localhost:8080; as requisições serão redirecionadas para o Tomcat.
+
+```
+nano /etc/nginx/sites-available/opencms
+```
+```
+server {
+    listen 80;
+    server_name opencms.local;
+
+    location / {
+        proxy_pass http://192.168.1.13:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Utils:
+
