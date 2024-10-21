@@ -161,7 +161,7 @@ unzip opencms-18.0.zip
 
 Movido para o diretório dos apps do tomcat
 ```
-mv opencms tomcat/webapps/
+mv opencms.war tomcat/webapps/
 ```
 Reiniciado o tomcat
 ```
