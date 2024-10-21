@@ -356,6 +356,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 Criado um diretório /home/victor/opencsm para armazenas o compose, dockerfiles e arquivos de config
 
 Diretório /home/victor/opencsm, com o docker-compose.yml
+
 .:
 total 28K
 drwxr-xr-x  6 root   root   4,0K out 20 21:34 .
@@ -420,6 +421,7 @@ networks:
 ```
 
 Diretório opencsm/nginx, contendo o Dockerfile e mapeamento de volumes
+
 ./nginx:
 total 20K
 drwxr-xr-x 2 root root 4,0K out 20 17:16 .
@@ -471,6 +473,7 @@ server {
 ```
 
 Diretório opencsm/tomcat, contendo o Dockerfile
+
 ./tomcat: 
 total 238M
 drwxr-xr-x 2 root root 4,0K out 20 11:11 .
@@ -500,6 +503,7 @@ CMD ["catalina.sh", "run"]
 ```
 
 diretório opencsm/opencsm, contendo mapeamento de volume
+
 ./opencms:
 total 238M
 drwxr-xr-x  6 root root 4,0K out 20 16:07 .
