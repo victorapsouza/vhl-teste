@@ -1,3 +1,5 @@
+:arrow_right: Instalação manual
+
 Optei por subir uma máquina virtual com o Vagrant junto com o Virtualbox
 
 ```
@@ -338,7 +340,7 @@ Utils:
 /var/log/nginx/error.log
 ```
 
-Instalação do Docker
+:arrow_right: Instalação do Docker
 
 ```
 # Add Docker's official GPG key:
@@ -530,4 +532,34 @@ Precisei efetuar a extração manual do opencms.war no /usr/local/tomcat/webapps
 docker exec -it  b43e8c9becb7 /bin/bash
 jar -xvf opencms.war -C /usr/local/tomcat/webapps/opencms
 ```
+<img src="inicial-docker">
 
+Durante a configuração deu alguns erros em relação ao usuário do banco e também com conexão já ativa
+
+```
+postgres-1  | 2024-10-20 14:56:19.988 UTC [98] FATAL:  database "opencms" does not exist
+postgres-1  | 2024-10-20 14:56:25.004 UTC [99] ERROR:  source database "template1" is being accessed by other users
+postgres-1  | 2024-10-20 14:56:25.004 UTC [99] DETAIL:  There is 1 other session using the database.
+
+postgres-1  | 2024-10-20 14:56:19.988 UTC [98] FATAL:  database "opencms" does not exist
+postgres-1  | 2024-10-20 14:56:25.004 UTC [99] ERROR:  source database "template1" is being accessed by other users
+postgres-1  | 2024-10-20 14:56:25.004 UTC [99] DETAIL:  There is 1 other session using the database.
+```
+
+Corrigi reiniciado os containers, com isso encerrando a sessão ativa
+
+Após o final da configuração, efetuado a configuração do Nginx
+
+Nessa parte, o nginx estava pegando a rota padrão, mesmo já tendo o arquivo de config do opencms no sites-enable e no sites-available
+
+```
+nginx-1     | 2024/10/20 19:17:43 [error] 23#23: *1 "/usr/share/nginx/html/opencms/system/login/index.html" is not found (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /opencms/system/login/ HTTP/1.1", host: "opencms.local"
+```
+A solução que eu encontrei foi mapear a config que eu aplique no sites-enabled e no site-available para o default.conf
+
+```
+volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+```
+
+<img src="final-docker">
