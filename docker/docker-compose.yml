@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: opencmssetup
+      POSTGRES_PASSWORD: opencmspass
+      POSTGRES_DB: opencms
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - opencms-network
+
+  tomcat:
+    build:
+      context: ./tomcat
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - opencms-network
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=opencms
+      - DB_USER=opencmssetup
+      - DB_PASS=opencmspass
+    volumes:
+      - ./opencms:/usr/local/tomcat/webapps/opencms
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - tomcat
+    networks:
+      - opencms-network
+
+
+volumes:
+  postgres-data:
+
+networks:
+  opencms-network:
