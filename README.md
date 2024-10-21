@@ -502,7 +502,7 @@ EXPOSE 8080
 CMD ["catalina.sh", "run"]
 ```
 
-diretório opencsm/opencsm, contendo mapeamento de volume
+Diretório opencsm/opencsm, contendo mapeamento de volume
 ```
 ./opencms:
 total 238M
@@ -515,5 +515,19 @@ drwxr-xr-x  9 root root 4,0K out 20 15:39 resources
 drwxr-xr-x 17 root root 4,0K out 20 16:07 WEB-INF
 ```
 
+Usei o comando ```docker-compose up --build``` para subir os containers
 
+```
+docker ps
+CONTAINER ID   IMAGE            COMMAND                  CREATED        STATUS       PORTS                                       NAMES
+fe42299eda2d   opencms-nginx    "/docker-entrypoint.…"   5 hours ago    Up 5 hours   0.0.0.0:80->80/tcp, :::80->80/tcp           opencms-nginx-1
+b43e8c9becb7   opencms-tomcat   "catalina.sh run"        11 hours ago   Up 5 hours   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   opencms-tomcat-1
+6d49dd060d6d   postgres:13      "docker-entrypoint.s…"   13 hours ago   Up 5 hours   5432/tcp                                    opencms-postgres-1
+```
+Precisei efetuar a extração manual do opencms.war no /usr/local/tomcat/webapps/
+
+```
+docker exec -it  b43e8c9becb7 /bin/bash
+jar -xvf opencms.war -C /usr/local/tomcat/webapps/opencms
+```
 
