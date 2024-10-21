@@ -532,7 +532,7 @@ Precisei efetuar a extração manual do opencms.war no /usr/local/tomcat/webapps
 docker exec -it  b43e8c9becb7 /bin/bash
 jar -xvf opencms.war -C /usr/local/tomcat/webapps/opencms
 ```
-<img src="inicial-docker">
+<img src="inicial-docker.png">
 
 Durante a configuração deu alguns erros em relação ao usuário do banco e também com conexão já ativa
 
@@ -562,4 +562,4 @@ volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
 ```
 
-<img src="final-docker">
+<img src="final-docker.png">
