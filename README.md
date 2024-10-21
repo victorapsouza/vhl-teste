@@ -38,7 +38,7 @@ openjdk 11.0.24 2024-07-16
 OpenJDK Runtime Environment (build 11.0.24+8-post-Ubuntu-1ubuntu320.04)
 OpenJDK 64-Bit Server VM (build 11.0.24+8-post-Ubuntu-1ubuntu320.04, mixed mode, sharing)
 ```
-Criado um usuário para o Tomcat, por questão de segurança e praticidade
+Criado um usuário para o Tomcat, por questão de segurança
 ```
 sudo useradd -m -d /opt/tomcat -U -s /bin/false tomcat
 ```
