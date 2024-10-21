@@ -337,3 +337,179 @@ Utils:
 /var/log/nginx/access.log
 /var/log/nginx/error.log
 ```
+
+Instalação do Docker
+
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+Add the repository to Apt sources:
+echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+Criado um diretório /home/victor/opencsm para armazenas o compose, dockerfiles e arquivos de config
+
+Diretório /home/victor/opencsm, com o docker-compose.yml
+.:
+total 28K
+drwxr-xr-x  6 root   root   4,0K out 20 21:34 .
+drwxr-x--- 24 victor victor 4,0K out 20 21:34 ..
+-rw-r--r--  1 root   root    901 out 20 17:12 docker-compose.yml
+drwxr-xr-x  2 root   root   4,0K out 20 17:16 nginx
+drwxr-xr-x  6 root   root   4,0K out 20 16:07 opencms
+drwxr-xr-x  2 root   root   4,0K out 20 11:11 tomcat
+
+```
+version: '3'
+
+services:
+  
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: opencmssetup
+      POSTGRES_PASSWORD: opencmspass
+      POSTGRES_DB: opencms
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - opencms-network
+
+  tomcat:
+    build:
+      context: ./tomcat
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - opencms-network
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=opencms
+      - DB_USER=opencmssetup
+      - DB_PASS=opencmspass
+    volumes:
+      - ./opencms:/usr/local/tomcat/webapps/opencms
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - tomcat
+    networks:
+      - opencms-network
+
+
+volumes:
+  postgres-data:
+
+networks:
+  opencms-network:
+```
+
+Diretório opencsm/nginx, contendo o Dockerfile e mapeamento de volumes
+./nginx:
+total 20K
+drwxr-xr-x 2 root root 4,0K out 20 17:16 .
+drwxr-xr-x 6 root root 4,0K out 20 21:34 ..
+-rw-r--r-- 1 root root  423 out 20 09:43 Dockerfile
+-rw-r--r-- 1 root root  875 out 20 17:16 nginx.conf
+-rw-r--r-- 1 root root  376 out 20 16:55 opencms
+
+```
+# Imagem do Nginx
+FROM nginx:latest
+
+# Criar diretório dos sites se não existirem
+RUN mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
+
+# Copiar a configuração do site para o container
+COPY opencms /etc/nginx/sites-available/opencms
+
+# Lik simbolico para halitar o site
+RUN ln -s /etc/nginx/sites-available/opencms /etc/nginx/sites-enabled/opencms
+
+# Exponha a porta 80
+EXPOSE 80
+```
+
+```
+server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+        proxy_pass http://opencms-tomcat-1:8080/;  # Direciona as requisições para o Tomcat
+        proxy_set_header Host $host;              # Passa o host original
+        proxy_set_header X-Real-IP $remote_addr;  # Passa o IP do cliente
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; # Adiciona o cabeçalho para proxies
+        proxy_set_header X-Forwarded-Proto $scheme;  # Adiciona o esquema (http ou https)
+    }
+
+    error_page 404 /404.html;  # Páginas de erro personalizadas
+    location = /404.html {
+        root /usr/share/nginx/html;  # Local onde está o arquivo 404.html
+    }
+
+    error_page 500 502 503 504 /50x.html;  # Páginas de erro personalizadas
+    location = /50x.html {
+        root /usr/share/nginx/html;  # Local onde está o arquivo 50x.html
+    }
+}
+```
+
+Diretório opencsm/tomcat, contendo o Dockerfile
+./tomcat: 
+total 238M
+drwxr-xr-x 2 root root 4,0K out 20 11:11 .
+drwxr-xr-x 6 root root 4,0K out 20 21:34 ..
+-rwxr-xr-x 1 root root  587 out 20 11:11 Dockerfile
+-rw-r--r-- 1 root root 238M out  7 10:54 opencms.war
+
+```
+# Usando a imagem base do Tomcat 9
+FROM tomcat:9.0
+
+# Diretório de trabalho
+WORKDIR /usr/local/tomcat
+
+# Copiar o OpenCms WAR para o diretório webapps do Tomcat
+COPY opencms.war /usr/local/tomcat/webapps/
+
+# Ajustar as permissões para o usuário tomcat
+RUN useradd -m -d /opt/tomcat -U -s /bin/false tomcat
+RUN chmod -R u+x /usr/local/tomcat/bin
+
+# Expõe a porta padrão do Tomcat
+EXPOSE 8080
+
+# Inicia o Tomcat
+CMD ["catalina.sh", "run"]
+```
+
+diretório opencsm/opencsm, contendo mapeamento de volume
+./opencms:
+total 238M
+drwxr-xr-x  6 root root 4,0K out 20 16:07 .
+drwxr-xr-x  6 root root 4,0K out 20 21:34 ..
+drwxr-x---  4 root root 4,0K out 20 16:07 export
+drwxr-xr-x  2 root root 4,0K out  7 06:37 META-INF
+-rw-r--r--  1 root root 238M out 20 11:16 opencms.war
+drwxr-xr-x  9 root root 4,0K out 20 15:39 resources
+drwxr-xr-x 17 root root 4,0K out 20 16:07 WEB-INF
+
+
+
+
