@@ -1,4 +1,4 @@
-:arrow_right: Instalação manual
+:arrow_right: **Instalação manual**
 
 Optei por subir uma máquina virtual com o Vagrant junto com o Virtualbox
 
@@ -340,7 +340,9 @@ Utils:
 /var/log/nginx/error.log
 ```
 
-:arrow_right: Instalação do Docker
+:arrow_right: **Subindo o serviço com Docker**
+
+Instalação do Docker
 
 ```
 # Add Docker's official GPG key:
