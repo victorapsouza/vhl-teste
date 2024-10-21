@@ -356,7 +356,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 Criado um diretório /home/victor/opencsm para armazenas o compose, dockerfiles e arquivos de config
 
 Diretório /home/victor/opencsm, com o docker-compose.yml
-
+```
 .:
 total 28K
 drwxr-xr-x  6 root   root   4,0K out 20 21:34 .
@@ -365,7 +365,7 @@ drwxr-x--- 24 victor victor 4,0K out 20 21:34 ..
 drwxr-xr-x  2 root   root   4,0K out 20 17:16 nginx
 drwxr-xr-x  6 root   root   4,0K out 20 16:07 opencms
 drwxr-xr-x  2 root   root   4,0K out 20 11:11 tomcat
-
+```
 ```
 version: '3'
 
@@ -421,7 +421,7 @@ networks:
 ```
 
 Diretório opencsm/nginx, contendo o Dockerfile e mapeamento de volumes
-
+```
 ./nginx:
 total 20K
 drwxr-xr-x 2 root root 4,0K out 20 17:16 .
@@ -429,7 +429,7 @@ drwxr-xr-x 6 root root 4,0K out 20 21:34 ..
 -rw-r--r-- 1 root root  423 out 20 09:43 Dockerfile
 -rw-r--r-- 1 root root  875 out 20 17:16 nginx.conf
 -rw-r--r-- 1 root root  376 out 20 16:55 opencms
-
+```
 ```
 # Imagem do Nginx
 FROM nginx:latest
@@ -473,14 +473,14 @@ server {
 ```
 
 Diretório opencsm/tomcat, contendo o Dockerfile
-
+```
 ./tomcat: 
 total 238M
 drwxr-xr-x 2 root root 4,0K out 20 11:11 .
 drwxr-xr-x 6 root root 4,0K out 20 21:34 ..
 -rwxr-xr-x 1 root root  587 out 20 11:11 Dockerfile
 -rw-r--r-- 1 root root 238M out  7 10:54 opencms.war
-
+```
 ```
 # Usando a imagem base do Tomcat 9
 FROM tomcat:9.0
@@ -503,7 +503,7 @@ CMD ["catalina.sh", "run"]
 ```
 
 diretório opencsm/opencsm, contendo mapeamento de volume
-
+```
 ./opencms:
 total 238M
 drwxr-xr-x  6 root root 4,0K out 20 16:07 .
@@ -513,7 +513,7 @@ drwxr-xr-x  2 root root 4,0K out  7 06:37 META-INF
 -rw-r--r--  1 root root 238M out 20 11:16 opencms.war
 drwxr-xr-x  9 root root 4,0K out 20 15:39 resources
 drwxr-xr-x 17 root root 4,0K out 20 16:07 WEB-INF
-
+```
 
 
 
